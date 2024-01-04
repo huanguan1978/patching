@@ -61,6 +61,20 @@ Map<String, dynamic> mapIntersection(
   return map3;
 }
 
+/// 合并两个字典交集,后者[map2]更新前者[map1],返回前者全部
+///
+///```dart
+/// var map1 = {'a': 1, 'b': 'b0', 'c': null};  var map2 = {'a': 11, 'd': 4};
+/// var map3 = mapIntersectionUpdate(map1, map2); print(map3); // {a: 11, b: b0, c:null}
+///```
+Map<String, dynamic> mapIntersectionUpdate(
+    Map<String, dynamic> map1, Map<String, dynamic> map2) {
+  map1.forEach((key, value) {
+    if (map2.containsKey(key)) map1[key] = map2[key];
+  });
+  return map1;
+}
+
 /// 对字典[map1]的项值占位[replaceholder]
 ///
 /// 返回占位项值后的新字典[hold],以及顺序健清单[keys]和顺序值清单[vals]

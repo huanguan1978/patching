@@ -21,9 +21,26 @@ void main() {
       expect(map3, containsPair('c', 'c0'));
     });
 
-    test('mapIntersection Test2', () {
-      var map3 = mapIntersection(map1, map9);
-      expect(map3, isEmpty);
+    test('mapIntersection Test1', () {
+      var map3 = mapIntersection(map1, map2);
+      expect(map3, contains('a'));
+      expect(map3, containsValue(1));
+      expect(map3, contains('c'));
+      expect(map3, containsValue('c0'));
+      expect(map3, containsPair('a', 1));
+      expect(map3, containsPair('c', 'c0'));
+    });
+    
+    test('mapIntersectionUpdate Test1', () {
+      var map41 = {'a': 1, 'b': 'b0', 'c': null};
+      var map42 = {'a': 11, 'd': 4};
+      var map3 = mapIntersectionUpdate(map41, map42);
+      // print(map3); // {a: 11, b: b0, 'c':null}
+      expect(map3,  containsPair('a', 11));
+      expect(map3,  containsPair('b', 'b0'));
+      expect(map3,  containsPair('c', null));
+      
+      expect(map3.keys, orderedEquals(['a', 'b', 'c']));
     });
 
     test('mapReplaceholderOfList Test', () {
