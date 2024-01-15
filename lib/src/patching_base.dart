@@ -32,8 +32,9 @@ String replaceholder(
 }) {
   var stmt = sql.replaceAll(';', ' ');
   if (stmt.startsWith(RegExp(r'^DELETE', caseSensitive: false))) {
-    stmt = stmt.replaceAll(RegExp(r'^DELETE', caseSensitive: false), 'DELETE FROM');
-  }  
+    stmt = stmt.replaceAll(
+        RegExp(r'^DELETE', caseSensitive: false), 'DELETE FROM');
+  }
   if (returning.isNotEmpty &&
       (sql.startsWith(RegExp(r'^INSERT', caseSensitive: false)) ||
           sql.startsWith(RegExp(r'^UPDATE', caseSensitive: false)) ||
@@ -99,6 +100,71 @@ Map<String, dynamic> mapReplaceholder(
   return map3;
 }
 
+/// 批量占位，以字典[tmpl]为例的项值占位[replaceholder],返回占位项值后的新字典[hold],以及顺序健清单[keys]和顺序值批量清单[vals]
+///
+///```dart
+/// var tmpl = {'a': 1, 'b': 'b0'};
+/// var dats = [{'a': 1, 'b': 'b2'}, {'a': 11, 'b': 'b22', 'c': 33}, {'a': 111, 'c': null, 'd': 444},];
+/// var map3 = mapReplaceholders(tmpl, dats); print(map3);
+/// // {hold: {a: ?, b: ?}, keys: [a, b], vals: [[1, b2], [11, b22], [111, b0]], rows: [{a: 1, b: b2}, {a: 11, b: b22}, {a: 111, b: b0}]}
+///```
+Map<String, dynamic> mapReplaceholders(
+  Map<String, dynamic> tmpl,
+  List<dynamic> dats, [
+  String replaceholder = '?',
+]) {
+  var map3 = <String, dynamic>{
+    'hold': <String, dynamic>{},
+    'keys': <String>[],
+    'vals': <List<Object?>>[],
+    'rows': <Map<String, dynamic>>[],
+  };
+
+  map3['keys'] = tmpl.keys.toList();
+  map3['keys'].forEach((key) => map3['hold'][key] = replaceholder);
+
+  var val = [];
+  for (var dat in dats) {
+    var item = dat as Map<String, dynamic>;
+    val.clear();
+    map3['keys'].forEach(
+        (key) => val.add(item.containsKey(key) ? item[key] : tmpl[key]));
+    map3['vals'].add(List.unmodifiable(val));
+  }
+  for (var row in map3['vals']) {
+    map3['rows']
+        .add(Map.fromIterables(map3['keys'], row).cast<String, dynamic>());
+  }
+  return map3;
+}
+
+/// 批量校验，字典列表[dats]的每一行执行函数校验，若任一项校验失败返回false否则返回true
+///
+///```dart
+/// final rows = [{'a': 1, 'b': 'b2'}, {'a': 11, 'b': 'b22'}, {'a': 111, 'b': 'b0'}];
+/// bool Function(Map<String, dynamic>) myfn = myvalidtion;
+/// // myfn(Map<String, dynamic> item)=>(item.containsKey('a') && item.containsKey('b') && (item['a'] is int))?true:false;
+/// print(batchValidtion(myfn, rows)); // true
+/// final rows2 = [{'a': 1, 'b': 'b2'}, {'a': 11, 'c': 'b22'}];
+/// print(batchValidtion(myfn, rows2)); // false;
+///
+/// bool myvalidtion(Map<String, dynamic> item) {
+///  if (item.containsKey('a') && item.containsKey('b') && (item['a'] is int)) {
+///    return true;
+///  }
+///  return false;
+/// }
+///```
+bool batchValidtion(
+    bool Function(Map<String, dynamic>) validation, List<dynamic> dats) {
+  for (Map<String, dynamic> item in dats) {
+    if (!validation(item)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 /// 转换列表[lists]且跳过列表[skips]中的每一项为字典的K并赋V值为占位符[replaceholder]
 ///
 ///```dart
@@ -161,9 +227,9 @@ String emailMaskcode(String email) {
   var len = name.length;
 
   if (len > 4) {
-    name = name.replaceRange(len - 4, len, ''.padRight(4,'*'));
+    name = name.replaceRange(len - 4, len, ''.padRight(4, '*'));
   } else {
-    name = ''.padRight(len,'*');
+    name = ''.padRight(len, '*');
   }
 
   return '$name@${lists[1]}';
