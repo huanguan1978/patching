@@ -4,6 +4,8 @@
 library patching;
 
 import 'dart:convert';
+import 'dart:math';
+
 import 'package:crypto/crypto.dart';
 
 part 'src/patching_base.dart';

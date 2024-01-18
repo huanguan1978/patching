@@ -15,6 +15,49 @@ bool isNumBetween(num n, min, max) {
   return (n >= min) && (n <= max);
 }
 
+/// 随机生成一个六位数
+///
+/// ```dart
+///  rndALNUM6(); // 167512
+///  rndALNUM6(); // 019579
+/// ```
+String rndALNUM6(){
+  return Random().nextInt(999999).toString().padLeft(6, '0');
+}
+
+/// 字符串[word]脱元字符[\]生成SQLITE的LIKE所需文本
+///
+///```dart
+/// print(sqliteLike('a'); // %a%
+/// print(sqliteLike('a', postfixPct:false)); // %a
+/// print(sqliteLike('a', prefixPct:false)); // a%
+/// print(sqliteLike('%10\%%')); // %10%%
+/// print(sqliteLike(r'%10\%%')); // %10\%% ESCAPE '\'
+///```
+///
+String sqliteLike(
+  String word, {
+  bool prefixPct = true,
+  bool postfixPct = true,
+}) {
+  StringBuffer buff = StringBuffer();
+
+  if (prefixPct && !word.startsWith(r'%')) {
+    buff.write(r'%');
+  }
+  // word = RegExp.escape(word);
+  buff.write(word);
+  if (postfixPct && !word.endsWith(r'%')) {
+    buff.write(r'%');
+  }
+
+  if (word.contains(r'\')) {
+    buff.write(r" ESCAPE '\'");
+  }
+
+  return buff.toString();
+}
+
 /// 替换伪占位符[placeholder]为真占位符[replaceholder]
 ///
 /// SQL替换占位符如"?"为?,且可为增删更语句附加数据返回[returning]子句
@@ -43,6 +86,24 @@ String replaceholder(
     stmt += returning.join(',');
   }
   return stmt.replaceAll(placeholders, replaceholders);
+}
+
+/// 字典[map]按键名集合[keys]过滤, 若选项[isblacklist]为则仅保留键名集合中有的数据，否则仅保留键名集合中没有的数据
+///
+///```dart
+///  var map1 = {'a': 1, 'b': 'b0', 'c': null};
+///  var map2 = Map.of(map1);
+///  var keys = {'b'};
+///  print(mapFilterByKeys(map2, keys)); // {b: b0}
+///  print(mapFilterByKeys(map1, keys, isblacklist: true)); // {a: 1, c: null}
+///```
+Map<String, dynamic> mapFilterByKeys(Map<String, dynamic> map, Set<String> keys,
+    {bool isblacklist = false}) {
+  final sets = isblacklist
+      ? map.keys.toSet().intersection(keys)
+      : map.keys.toSet().difference(keys);
+  map.removeWhere((k, v) => sets.contains(k));
+  return map;
 }
 
 /// 取两个字典[map1]和[map2]的交集

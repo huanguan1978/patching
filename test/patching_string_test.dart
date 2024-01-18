@@ -26,5 +26,23 @@ void main() {
         expect(splitToIntList('a,b,c,d,'), isEmpty);        
    });
 
+    test('emailMaskcode Test', () {
+      expect(sqliteLike('a'), equals('%a%'));
+      expect(sqliteLike('a', postfixPct:false), equals('%a'));
+      expect(sqliteLike('a',postfixPct:false), equals('%a'));
+      expect(sqliteLike('%10\%%',prefixPct:false), equals('%10%%'));
+      expect(sqliteLike(r'%10\%%',prefixPct:false), equals(r"%10\%% ESCAPE '\'"));
+      
+  });
+
+    test('isPasswordSecure Test', () {
+      // expect(awesome.isAwesome, isTrue);
+      expect(isPasswordSecure('Vignesh123!'), isTrue);
+      expect(isPasswordSecure('vignesh123'), isFalse);
+      expect(isPasswordSecure('VIGNESH123!'), isFalse);
+      expect(isPasswordSecure('vignesh@'), isFalse);
+      expect(isPasswordSecure('12345678?'), isFalse);
+    });
+  
 });
 }

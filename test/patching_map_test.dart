@@ -10,6 +10,16 @@ void main() {
     setUp(() {
       // Additional setup goes here.
     });
+    test('mapFilterByKeys Test1', () {
+      var map40 = Map.of(map1);
+      var map41 = Map.of(map1);
+      var keys = {'b'};
+      var map50 = mapFilterByKeys(map40, keys); // {b: b0}
+      var map51 = mapFilterByKeys(map41, keys, isblacklist: true); // {a: 1, c: null}
+      expect(map50, contains('b'));
+      expect(map51.keys, orderedEquals(['a','c']));
+
+  });
 
     test('mapIntersection Test1', () {
       var map3 = mapIntersection(map1, map2);
@@ -155,8 +165,7 @@ void main() {
 
       final valid1 = batchValidtion(myfn, rows); // true
       expect(valid1, isTrue);
-
-  });
+    });
 
     // lastline tests
   });

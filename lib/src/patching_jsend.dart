@@ -23,7 +23,7 @@ Map<String, dynamic> jsendSuccess(Map<String, Object> data) {
 
 /// JSend标准,失败数据封装[data]
 ///
-/// 成功数据, status值必为fail, data值非空必为键值对数据
+/// 失败数据, status值必为fail, data值非空必为键值对数据
 ///
 ///```dart
 /// var item = {'item':{'name':'email', 'input':'abc.com', 'output':'invalid email'}, };
@@ -51,7 +51,7 @@ Map<String, dynamic> jsendFail(Map<String, Object> data) {
 
 /// JSend标准, 错误数据封装[data]
 ///
-/// 成功数据, status值必为error, message值非空
+/// 错误数据, status值必为error, message值非空
 /// 
 /// 可选数据, code值为整数错误编号; 可选数据, data值为键值对数据
 ///```dart
