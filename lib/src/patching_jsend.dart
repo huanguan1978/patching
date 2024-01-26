@@ -1,4 +1,4 @@
-part of patching;
+part of '../patching.dart';
 
 /// JSend标准,成功数据封装[data]
 ///

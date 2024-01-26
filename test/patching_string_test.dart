@@ -30,6 +30,7 @@ void main() {
       expect(sqliteLike('a'), equals('%a%'));
       expect(sqliteLike('a', postfixPct:false), equals('%a'));
       expect(sqliteLike('a',postfixPct:false), equals('%a'));
+      // ignore: unnecessary_string_escapes
       expect(sqliteLike('%10\%%',prefixPct:false), equals('%10%%'));
       expect(sqliteLike(r'%10\%%',prefixPct:false), equals(r"%10\%% ESCAPE '\'"));
       

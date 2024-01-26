@@ -1,4 +1,4 @@
-part of patching;
+part of '../patching.dart';
 /* import 'dart:convert';
 import 'package:crypto/crypto.dart'; */
 

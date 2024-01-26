@@ -1,4 +1,4 @@
-part of patching;
+part of '../patching.dart';
 
 /// Put public facing types in this file.
 
