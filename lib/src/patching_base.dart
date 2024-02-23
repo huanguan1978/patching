@@ -15,13 +15,29 @@ bool isNumBetween(num n, min, max) {
   return (n >= min) && (n <= max);
 }
 
+/// 校验密码是否合规
+///
+/// 密码规则:至少含1大写字符,至少含1小写字符,至少含1数字,至少含1标点符号(!@#\$&*~)
+///```dart
+/// isPasswordSecure('Vignesh123!'); // true
+/// isPasswordSecure('vignesh123'); // false
+/// isPasswordSecure('VIGNESH123!'); // false
+/// isPasswordSecure('vignesh@'); // false
+/// isPasswordSecure('12345678?'); // false
+///```
+bool isPasswordSecure(String password) {
+  const pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+  final regExp = RegExp(pattern);
+  return regExp.hasMatch(password);
+}
+
 /// 随机生成一个六位数
 ///
 /// ```dart
 ///  rndALNUM6(); // 167512
 ///  rndALNUM6(); // 019579
 /// ```
-String rndALNUM6(){
+String rndALNUM6() {
   return Random().nextInt(999999).toString().padLeft(6, '0');
 }
 
@@ -73,10 +89,9 @@ String replaceholder(
   String placeholders = '"?"',
   List<String> returning = const [],
 }) {
-  var stmt = sql.replaceAll(';', ' ');
+  var stmt = sql.replaceAll(';', ' ').replaceAll("\n", ' ').replaceAll('"', '').replaceAll(' , ', ', ');
   if (stmt.startsWith(RegExp(r'^DELETE', caseSensitive: false))) {
-    stmt = stmt.replaceAll(
-        RegExp(r'^DELETE', caseSensitive: false), 'DELETE FROM');
+    stmt = stmt.replaceAll(RegExp(r'^DELETE', caseSensitive: false), 'DELETE FROM');
   }
   if (returning.isNotEmpty &&
       (sql.startsWith(RegExp(r'^INSERT', caseSensitive: false)) ||
@@ -97,11 +112,8 @@ String replaceholder(
 ///  print(mapFilterByKeys(map2, keys)); // {b: b0}
 ///  print(mapFilterByKeys(map1, keys, isblacklist: true)); // {a: 1, c: null}
 ///```
-Map<String, dynamic> mapFilterByKeys(Map<String, dynamic> map, Set<String> keys,
-    {bool isblacklist = false}) {
-  final sets = isblacklist
-      ? map.keys.toSet().intersection(keys)
-      : map.keys.toSet().difference(keys);
+Map<String, dynamic> mapFilterByKeys(Map<String, dynamic> map, Set<String> keys, {bool isblacklist = false}) {
+  final sets = isblacklist ? map.keys.toSet().intersection(keys) : map.keys.toSet().difference(keys);
   map.removeWhere((k, v) => sets.contains(k));
   return map;
 }
@@ -114,8 +126,7 @@ Map<String, dynamic> mapFilterByKeys(Map<String, dynamic> map, Set<String> keys,
 /// var map3 = mapIntersection(map1, map2); print(map3); // {a: 1, c: c0}
 /// var map4 = mapIntersection(map1, map9); print(map4); // {}
 ///```
-Map<String, dynamic> mapIntersection(
-    Map<String, dynamic> map1, Map<String, dynamic> map2) {
+Map<String, dynamic> mapIntersection(Map<String, dynamic> map1, Map<String, dynamic> map2) {
   var map3 = <String, dynamic>{};
   map1.forEach((key, value) {
     if (map2.containsKey(key)) map3[key] = map2[key];
@@ -129,8 +140,7 @@ Map<String, dynamic> mapIntersection(
 /// var map1 = {'a': 1, 'b': 'b0', 'c': null};  var map2 = {'a': 11, 'd': 4};
 /// var map3 = mapIntersectionUpdate(map1, map2); print(map3); // {a: 11, b: b0, c:null}
 ///```
-Map<String, dynamic> mapIntersectionUpdate(
-    Map<String, dynamic> map1, Map<String, dynamic> map2) {
+Map<String, dynamic> mapIntersectionUpdate(Map<String, dynamic> map1, Map<String, dynamic> map2) {
   map1.forEach((key, value) {
     if (map2.containsKey(key)) map1[key] = map2[key];
   });
@@ -188,13 +198,11 @@ Map<String, dynamic> mapReplaceholders(
   for (var dat in dats) {
     var item = dat as Map<String, dynamic>;
     val.clear();
-    map3['keys'].forEach(
-        (key) => val.add(item.containsKey(key) ? item[key] : tmpl[key]));
+    map3['keys'].forEach((key) => val.add(item.containsKey(key) ? item[key] : tmpl[key]));
     map3['vals'].add(List.unmodifiable(val));
   }
   for (var row in map3['vals']) {
-    map3['rows']
-        .add(Map.fromIterables(map3['keys'], row).cast<String, dynamic>());
+    map3['rows'].add(Map.fromIterables(map3['keys'], row).cast<String, dynamic>());
   }
   return map3;
 }
@@ -216,8 +224,7 @@ Map<String, dynamic> mapReplaceholders(
 ///  return false;
 /// }
 ///```
-bool batchValidtion(
-    bool Function(Map<String, dynamic>) validation, List<dynamic> dats) {
+bool batchValidtion(bool Function(Map<String, dynamic>) validation, List<dynamic> dats) {
   for (Map<String, dynamic> item in dats) {
     if (!validation(item)) {
       return false;
@@ -247,23 +254,6 @@ Map<String, dynamic> mapReplaceholderOfList(
     }
   }
   return map3;
-}
-
-/// 校验密码是否合规
-///
-/// 密码规则:至少含1大写字符,至少含1小写字符,至少含1数字,至少含1标点符号(!@#\$&*~)
-///```dart
-/// isPasswordSecure('Vignesh123!'); // true
-/// isPasswordSecure('vignesh123'); // false
-/// isPasswordSecure('VIGNESH123!'); // false
-/// isPasswordSecure('vignesh@'); // false
-/// isPasswordSecure('12345678?'); // false
-///```
-bool isPasswordSecure(String password) {
-  const pattern =
-      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-  final regExp = RegExp(pattern);
-  return regExp.hasMatch(password);
 }
 
 /// 反转字符串[text]
