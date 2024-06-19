@@ -44,6 +44,14 @@ void main() {
       expect(isPasswordSecure('vignesh@'), isFalse);
       expect(isPasswordSecure('12345678?'), isFalse);
     });
-  
+
+    test('replaceFileName Test', () {
+      // expect(awesome.isAwesome, isTrue);
+      expect(replaceFileName('abc.jpg', '1234'), equals('1234.jpg'));
+      expect(replaceFileName('abc.bak.jpg', '1234'), equals('1234.jpg'));
+      expect(replaceFileName('abc', '1234'), equals('abc'));
+    });
+
+    
 });
 }

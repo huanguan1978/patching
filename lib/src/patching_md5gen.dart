@@ -8,5 +8,9 @@ import 'package:crypto/crypto.dart'; */
 ///  md5gen('abcdefg'); // 7ac66c0f148de9519b8bd264312c4d64
 /// ```
 String md5gen(String text) {
-  return md5.convert(utf8.encode(text)).toString();
+  return md5bytes(utf8.encode(text));
+}
+
+String md5bytes(List<int> bytes) {
+  return md5.convert(bytes).toString();
 }
