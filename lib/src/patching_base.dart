@@ -54,6 +54,19 @@ int timestamp16() {
   return msts;
 }
 
+/// 将控制字符替换为对应的转义序列
+///
+/// ```dart
+///  escapeBackslash(r'hello\nworld'); // 'hello\\nworld'
+/// ```
+String escapeBackslash(String text){
+  String escapedText = text
+      .replaceAll('\n', '\\\\n')
+      .replaceAll('\r', '\\\\r')
+      .replaceAll('\t', '\\\\t');     
+  return escapedText;
+}
+
 /// 替换文件名但保留扩展名
 ///
 /// ```dart

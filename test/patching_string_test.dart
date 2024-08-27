@@ -9,6 +9,11 @@ void main() {
       // Additional setup goes here.
     });
 
+    test('escapeBackslash Test', () {
+        // expect(awesome.isAwesome, isTrue);
+      expect(escapeBackslash('hello\nworld'), equals(r'hello\\nworld'));
+    });
+    
     test('strReverse Test', () {
       // expect(awesome.isAwesome, isTrue);
       expect(strReverse('Hello World'), equals('dlroW olleH'));
