@@ -139,11 +139,13 @@ String replaceholder(
       .replaceAll("\n", ' ')
       .replaceAll('"', '')
       .replaceAll(' , ', ', ');
+/*
   if (stmt.startsWith(RegExp(r'^DELETE', caseSensitive: false))) {
     stmt = stmt.replaceAll(
         RegExp(r'^DELETE', caseSensitive: false), 'DELETE FROM');
   }
-  if (returning.isNotEmpty &&
+*/
+    if (returning.isNotEmpty &&
       (sql.startsWith(RegExp(r'^INSERT', caseSensitive: false)) ||
           sql.startsWith(RegExp(r'^UPDATE', caseSensitive: false)) ||
           sql.startsWith(RegExp(r'^DELETE', caseSensitive: false)))) {

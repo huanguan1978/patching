@@ -16,6 +16,7 @@ part 'src/patching_tmpl.dart';
 part 'src/patching_exec.dart';
 part 'src/patching_md5gen.dart';    
 part 'src/patching_timeago.dart';    
+part 'src/patching_file.dart';    
 
 
 // TODO: Export any libraries intended for clients of this package.
