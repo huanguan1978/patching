@@ -20,9 +20,15 @@ void main() {
       expect(sizes, greaterThan(0));
     });
 
-    test('fileNumbering Test', () {
-      expect(fileNumbering('abc.jpg'), equals('abc_1.jpg'));
-      expect(fileNumbering('abc_1.jpg'), equals('abc_2.jpg'));
+    test('fileNameNumbering Test', () {
+      expect(fileNameNumbering('abc.jpg'), equals('abc_1.jpg'));
+      expect(fileNameNumbering('abc_1.jpg'), equals('abc_2.jpg'));
+    });
+
+    test('filePatternNumbering Test', () {
+      var names = ['abc.jpg', 'def.jpg', 'abc.htm', 'abc_1.jpg', 'abc_2.jpg'];
+      expect(filePatternNumbering(names, 'abc.jpg'), equals('abc_2.jpg'));
+      expect(filePatternNumbering(names, 'notfound.htm'), isEmpty);
     });
 
     // group_lastline

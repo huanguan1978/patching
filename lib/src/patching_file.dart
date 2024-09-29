@@ -27,16 +27,14 @@ int fileSizes(List<String> files, [bool exists = false]) {
 /// 文件名[filename]数字化
 ///
 /// ```dart
-///  fileNumbering('abc.jpg'); // abc_1.jpg
-///  fileNumbering('abc_1.jpg'); // abc_2.jpg
+///  fileNameNumbering('abc.jpg'); // abc_1.jpg
+///  fileNameNumbering('abc_1.jpg'); // abc_2.jpg
 /// ```
-String fileNumbering(String filename) {
-  // Split the filename into name and extension
+String fileNameNumbering(String filename) {
   final parts = filename.split('.');
   final name = parts.first;
   final extname = parts.last;
 
-  // Check if the name already has the specific suffix
   final match = RegExp(r'_\d+$').firstMatch(name);
   if (match == null) {
     return '${name}_1.$extname';
@@ -45,4 +43,23 @@ String fileNumbering(String filename) {
     num++;
     return '${name.substring(0, match.start)}_$num.$extname';
   }
+}
+
+/// 找出文件名清单中[filenames]最后一个匹配[filename]的数字化名文件名
+///
+/// ```dart
+///  var names = ['abc.jpg', 'def.jpg', 'abc.htm', 'abc_1.jpg', 'abc_2.jpg'];
+///  filePatternNumbering(names, 'abc.jpg'); // abc_2.jpg
+///  filePatternNumbering(names, 'notfound.htm'); // ''
+/// ```
+String filePatternNumbering(List<String> filenames, String filename) {
+  filenames.sort((a, b) => b.compareTo(a)); // 降序排序
+
+  var [baseName, ..._, extName] = filename.split('.');
+  final pattern = '^$baseName.*$extName\$';
+  final regex = RegExp(pattern);
+
+  return filenames.firstWhere((fileName) {
+    return regex.hasMatch(fileName);
+  }, orElse: () => '');
 }
