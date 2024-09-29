@@ -20,6 +20,11 @@ void main() {
       expect(sizes, greaterThan(0));
     });
 
+    test('fileNumbering Test', () {
+      expect(fileNumbering('abc.jpg'), equals('abc_1.jpg'));
+      expect(fileNumbering('abc_1.jpg'), equals('abc_2.jpg'));
+    });
+
     // group_lastline
   });
 }
