@@ -1,6 +1,27 @@
 part of '../patching.dart';
 
-/// Put public facing types in this file.
+/// 把一个布尔字符串[name]，转为bool类型.
+///
+/// 注意:字符串不区分大小写，
+/// 返回false, 字符串为"0"，"false"，"no"，"off"。 其余视为true
+/// ```dart
+///  toBool(''); // false
+///  toBool('false'); // false
+///  toBool('False'); // false
+///  toBool('1'); // true
+///  toBool('true'); // true
+///  toBool('True'); // true
+///  toBool('a'); // true
+/// ```
+bool toBool(String name) {
+  name = name.trim().toLowerCase();
+  if (name.isEmpty) return false;
+  if (name == '0') return false;
+  if (name == 'false') return false;
+  if (name == 'no') return false;
+  if (name == 'off') return false;
+  return true;
+}
 
 /// 判断一个数[num],是否在最小[min]或最大[max]范围内.
 ///
@@ -59,11 +80,11 @@ int timestamp16() {
 /// ```dart
 ///  escapeBackslash(r'hello\nworld'); // 'hello\\nworld'
 /// ```
-String escapeBackslash(String text){
+String escapeBackslash(String text) {
   String escapedText = text
       .replaceAll('\n', '\\\\n')
       .replaceAll('\r', '\\\\r')
-      .replaceAll('\t', '\\\\t');     
+      .replaceAll('\t', '\\\\t');
   return escapedText;
 }
 
@@ -76,7 +97,7 @@ String escapeBackslash(String text){
 /// ```
 String replaceFileName(String fileName, String newName) {
   // 使用正则表达式提取文件名部分
-  int lastDotIndex = fileName.lastIndexOf('.');  
+  int lastDotIndex = fileName.lastIndexOf('.');
   if (lastDotIndex != -1) {
     String extension = fileName.substring(lastDotIndex);
     String newFileName = '$newName$extension';
@@ -145,7 +166,7 @@ String replaceholder(
         RegExp(r'^DELETE', caseSensitive: false), 'DELETE FROM');
   }
 */
-    if (returning.isNotEmpty &&
+  if (returning.isNotEmpty &&
       (sql.startsWith(RegExp(r'^INSERT', caseSensitive: false)) ||
           sql.startsWith(RegExp(r'^UPDATE', caseSensitive: false)) ||
           sql.startsWith(RegExp(r'^DELETE', caseSensitive: false)))) {
