@@ -24,6 +24,29 @@ int fileSizes(List<String> files, [bool exists = false]) {
   return totalSize;
 }
 
+/// 列出列表[files]中文件名与大小的元组
+///
+/// 若[exists]为true则文件列表[files]必须都存在.
+/// 1M = 1024*1024*1.
+/// ```dart
+///  fileSizeLists(['/etc/hosts', '/etc/notexist']); // [('/etc/hosts',512)]
+/// ```
+List<(String, int)> fileSizeLists(List<String> files, [bool exists = false]) {
+  if (!exists) files = fileExists(files);
+  return files.map((e) => (e, File(e).lengthSync())).toList();
+}
+
+/// 合计文件大小元组[fileSizeLists]总大小
+///
+/// 若[exists]为true则文件列表[files]必须都存在.
+/// 1M = 1024*1024*1.
+/// ```dart
+///  fileSizeLists([('/etc/hosts',512)，('/etc/profile',256)]); // 768
+/// ```
+int fileSizeFromLists(List<(String, int)> fileSizeLists) {
+  return fileSizeLists.fold(0, (a, b) => a + b.$2);
+}
+
 /// 文件名[filename]数字化
 ///
 /// ```dart

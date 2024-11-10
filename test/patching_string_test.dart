@@ -57,6 +57,21 @@ void main() {
       expect(replaceFileName('abc', '1234'), equals('abc'));
     });
 
+    test('autoIncrVal Test', () {
+      // expect(awesome.isAwesome, isTrue);
+      expect(autoIncrVal('abc'), equals('abc1'));
+      expect(autoIncrVal('abc1'), equals('abc2'));
+      expect(autoIncrVal('def123'), equals('def124'));
+    });
+
+    test('isEmail Test', () {
+      expect(isEmail('abc@gmail.com'), isTrue);
+      expect(isEmail('abc.g@gmail.com'), isTrue);
+      expect(isEmail('abc.g@gmail'), isFalse);
+      expect(isEmail('abc.g@gmail.'), isFalse);
+      expect(isEmail('@gmail.com'), isFalse);
+    });
+
     test('toBool Test', () {
       expect(toBool(''), isFalse);
       expect(toBool('0'), isFalse);

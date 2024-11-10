@@ -36,6 +36,22 @@ bool isNumBetween(num n, min, max) {
   return (n >= min) && (n <= max);
 }
 
+/// 判断一个email是否合法.
+///
+/// ```dart
+///  isEmail('abc@gmail.com'); // true
+///  isEmail('abc.g@gmail.com'); // true
+///  isEmail('abc.g@gmail'); // false
+///  isEmail('abc.g@gmail.'); // false
+///  isEmail('@gmail.com'); // false
+/// ```
+bool isEmail(String email) {
+  int atIndex = email.indexOf('@');
+  if (atIndex < 1) return false;
+  int dotIndex = email.lastIndexOf('.');
+  return (dotIndex > atIndex + 1) && (dotIndex < email.length - 1);
+}
+
 /// 校验密码是否合规
 ///
 /// 密码规则:至少含1大写字符,至少含1小写字符,至少含1数字,至少含1标点符号(!@#\$&*~)
@@ -105,6 +121,26 @@ String replaceFileName(String fileName, String newName) {
   }
 
   return fileName;
+}
+
+/// 自增字符串[id]
+///
+/// ```dart
+///  autoIncrVal('abc'); // abc1
+///  autoIncrVal('abc1'); // abc2
+///  autoIncrVal('def123'); // def124
+/// ```
+String autoIncrVal(String id) {
+  RegExp regExp = RegExp(r'\d+$');
+  RegExpMatch? match = regExp.firstMatch(id);
+  if (match != null) {
+    String found = match.group(0)!;
+    int num = int.parse(found);
+    String incrVal = id.substring(0, match.start) + (num + 1).toString();
+    return incrVal;
+  } else {
+    return '${id}1';
+  }
 }
 
 /// 字符串[word]脱元字符[\]生成SQLITE的LIKE所需文本
