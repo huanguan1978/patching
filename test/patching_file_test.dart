@@ -9,6 +9,12 @@ void main() {
       // Additional setup goes here.
     });
 
+    test('fileDelete Test', () {
+      final filename = r'/tmp/temp_notexist.txt';
+      final deleted = fileDelete(filename);
+      expect(deleted, isFalse);
+    });
+
     test('fileExists Test', () {
       final exists = fileExists(files);
       expect(exists, contains('/etc/hosts'));

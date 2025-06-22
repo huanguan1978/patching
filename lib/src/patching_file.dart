@@ -1,5 +1,38 @@
 part of '../patching.dart';
 
+/// 删除文件[filename]，自适配路径信息，成功返回true，否则返回false
+///
+/// ```dart
+///  deleteFile('/tmp/temp.txt'); // if exist return true
+///  deleteFile('file:///tmp/temp.txt'); // if exist return true
+///  deleteFile('http://www.example.com/readmd.txt'); // false
+/// ```
+bool fileDelete(String filename) {
+  if (filename.isEmpty) return false;
+  if (filename.startsWith('http')) return false;
+
+  late final File file;
+  if (filename.startsWith('file:')) {
+    final uri = Uri.tryParse(filename);
+    if (uri != null) file = File.fromUri(uri);
+  } else {
+    file = File(filename);
+  }
+
+  bool deleted = false;
+  try {
+    if (file.existsSync()) {
+      file.deleteSync();
+      deleted = true;
+    }
+  } catch (e) {
+    // ignore: avoid_print
+    print('deletefile failure, $e');
+  }
+
+  return deleted;
+}
+
 /// 筛选并返回列表[files]中存在的文件清单.
 ///
 /// ```dart
